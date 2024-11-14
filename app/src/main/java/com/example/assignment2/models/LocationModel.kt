@@ -2,22 +2,32 @@ package com.example.assignment2.models;
 
 import android.location.Location
 
-public data class LocationModel(private var long : Double,
-    private var lat : Double,
-    private var velocity : Float) {
+public data class LocationModel(private var studentID: Int, private var latitude : Double,
+                                private var longitude : Double,
+                                private var velocity : Float) {
+
 
     companion object {
-        fun toLocationModel(location: Location) : LocationModel {
-            return LocationModel(location.longitude, location.latitude, location.speed)
+        var id = 0
+        fun toLocationModel(location: Location, studentID: Int) : LocationModel {
+            return LocationModel(studentID, location.latitude, location.longitude, location.speed)
         }
     }
 
+    init {
+        id++
+    }
+
+    fun getID() : Int {
+        return id
+    }
+
     public fun getLong(): Double {
-        return long
+        return longitude
     }
 
     public fun getLat(): Double {
-        return lat
+        return latitude
     }
 
     public fun getVelocity() : Float {

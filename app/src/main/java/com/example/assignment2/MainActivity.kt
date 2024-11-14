@@ -31,6 +31,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient
 class MainActivity : AppCompatActivity() {
     private var mqttClient : Mqtt5AsyncClient? = null
     private var clientID : String = ""
+    private var studentID : Int = 0
     private val topic : String = "assignment/location"
     private var hasPermissions : Boolean = false
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-                val currentLocation = p0.lastLocation?.let{LocationModel.toLocationModel(it)}
+                val currentLocation = p0.lastLocation?.let{LocationModel.toLocationModel(it, studentID)}
                 Log.e("Location", currentLocation.toString())
                 if (currentLocation != null) {
                     sendToBroker(currentLocation)
@@ -103,7 +104,8 @@ class MainActivity : AppCompatActivity() {
             // Toast
             return
         }
-        if (studentIDText.toInt() !in 816000000..816999999) {
+        studentID = studentIDText.toInt()
+        if (studentID !in 816000000..816999999) {
             return
         }
 
@@ -136,7 +138,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("SEND", "Trying to send")
             val toSend: String = Gson().toJson(content)
             Log.e("SEND", Gson().fromJson(toSend, LocationModel::class.java).toString())
-            mqttClient?.publishWith()?.topic("hello")?.payload(toSend.toByteArray())?.send()
+            mqttClient?.publishWith()?.topic(topic)?.payload(toSend.toByteArray())?.send()
         } catch (e: Exception) {
             e.printStackTrace()
             Log.e("MQTT", "Something went wrong :(")
