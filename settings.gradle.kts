@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Assignment2"
+rootProject.name = "MQTTPublisher"
 include(":app")
  

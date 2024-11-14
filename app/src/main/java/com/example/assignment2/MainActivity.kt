@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import com.example.assignment2.models.LocationModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -25,9 +26,10 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import java.util.concurrent.TimeUnit
 import com.google.gson.Gson
+import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient
 
 class MainActivity : AppCompatActivity() {
-    private var mqttClient : Mqtt5BlockingClient? = null
+    private var mqttClient : Mqtt5AsyncClient? = null
     private var clientID : String = ""
     private val topic : String = "assignment/location"
     private var hasPermissions : Boolean = false
@@ -63,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-                var currentLocation = p0.lastLocation
+                val currentLocation = p0.lastLocation?.let{LocationModel.toLocationModel(it)}
                 Log.e("Location", currentLocation.toString())
                 if (currentLocation != null) {
                     sendToBroker(currentLocation)
@@ -110,7 +112,7 @@ class MainActivity : AppCompatActivity() {
             .identifier(clientID)
             .serverHost("broker-816036749.sundaebytestt.com")
             .serverPort(1883)
-            .buildBlocking()
+            .buildAsync()
         fusedLocationProvider.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
         try {
             mqttClient?.connect()
@@ -129,12 +131,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun sendToBroker(location : Location) {
+    fun sendToBroker(content: Any) {
         try {
             Log.i("SEND", "Trying to send")
-            val payload: String = Gson().toJson(location)
-            mqttClient?.publishWith()?.topic("hello")?.payload(payload.toByteArray())?.send()
+            val toSend: String = Gson().toJson(content)
+            Log.e("SEND", Gson().fromJson(toSend, LocationModel::class.java).toString())
+            mqttClient?.publishWith()?.topic("hello")?.payload(toSend.toByteArray())?.send()
         } catch (e: Exception) {
+            e.printStackTrace()
             Log.e("MQTT", "Something went wrong :(")
         }
     }
