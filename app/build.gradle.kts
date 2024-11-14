@@ -38,6 +38,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("androidx.fragment:fragment-ktx:1.8.5")
     implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
     implementation(libs.androidx.core.ktx)
