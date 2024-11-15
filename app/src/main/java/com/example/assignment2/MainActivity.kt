@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
     private var mqttClient : Mqtt5AsyncClient? = null
     private var clientID : String = ""
     private var studentID : Int = 0
-    private val topic : String = "assignment/location"
+    private val topic : String = "notthatguy"
     private var hasPermissions : Boolean = false
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             results : Map<String, Boolean> ->
@@ -58,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         }
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
         locationRequest = LocationRequest.create().apply {
-            interval = TimeUnit.SECONDS.toMillis(5)
-            fastestInterval = TimeUnit.SECONDS.toMillis(1)
-            maxWaitTime = TimeUnit.SECONDS.toMillis(10)
+            interval = 50
+            fastestInterval = 10
+            maxWaitTime = 100
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
         locationCallback = object : LocationCallback() {
