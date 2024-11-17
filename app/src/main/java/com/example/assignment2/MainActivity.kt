@@ -73,11 +73,12 @@ class MainActivity : AppCompatActivity() {
         })
 
         fusedLocationProvider = LocationServices.getFusedLocationProviderClient(this)
-        locationRequest = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 100).setMaxUpdateDelayMillis(120).build()
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 100).setMaxUpdateDelayMillis(120).setMinUpdateDistanceMeters(0f).build()
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 updateUI()
                 super.onLocationResult(p0)
+                val last = p0.lastLocation
                 val currentLocation = p0.lastLocation?.let{LocationModel.toLocationModel(it, studentID)}
                 Log.e("Location", currentLocation.toString())
                 if (currentLocation != null) {
