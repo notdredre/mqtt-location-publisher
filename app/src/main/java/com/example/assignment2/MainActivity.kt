@@ -1,17 +1,9 @@
 package com.example.assignment2
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient
-import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Location
+import android.os.Bundle
 import android.os.Looper
 import android.util.Log
 import android.view.View
@@ -19,8 +11,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.assignment2.models.LocationModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -28,17 +25,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import java.util.concurrent.TimeUnit
 import com.google.gson.Gson
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient
-import org.w3c.dom.Text
+import com.hivemq.client.mqtt.mqtt5.Mqtt5Client
 
 class MainActivity : AppCompatActivity() {
     private var mqttClient : Mqtt5AsyncClient? = null
     private var clientID : String = ""
     private var studentID : Int = 0
     private var brokerAddress : String = "broker-816036749.sundaebytestt.com"
-    private val topic : String = "notthatguy"
+    private val topic : String = "assignment/location"
     private var publishing : Boolean = false
     private var hasPermissions : Boolean = false
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -137,7 +133,7 @@ class MainActivity : AppCompatActivity() {
         clientID = studentIDText
         mqttClient = Mqtt5Client.builder()
             .identifier(clientID)
-            .serverHost("broker-816036749.sundaebytestt.com")
+            .serverHost(brokerAddress)
             .serverPort(1883)
             .buildAsync()
 

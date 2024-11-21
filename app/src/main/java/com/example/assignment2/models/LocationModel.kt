@@ -2,7 +2,7 @@ package com.example.assignment2.models;
 
 import android.location.Location
 
-public data class LocationModel(private var studentID: Int, private var latitude : Double,
+data class LocationModel(private var studentID: Int, private var latitude : Double,
                                 private var longitude : Double,
                                 private var velocity : Float,
                                 private var timestamp: Long) {
@@ -28,15 +28,15 @@ public data class LocationModel(private var studentID: Int, private var latitude
         return studentID
     }
 
-    public fun getLong(): Double {
+    fun getLong(): Double {
         return longitude
     }
 
-    public fun getLat(): Double {
+    fun getLat(): Double {
         return latitude
     }
 
-    public fun getVelocity() : Float {
+    fun getVelocity() : Float {
         return velocity
     }
 
